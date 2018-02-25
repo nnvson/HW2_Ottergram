@@ -1,6 +1,7 @@
-var DETAIL_IMAGE_SELECTOR = "[data-image-role='target']";
-var DETAIL_TITLE_SELECTOR = "[data-image-role='title']";
-var THUMBNAIL_LINK_SELECTOR = "[data-image-role='trigger']";
+var DETAIL_IMAGE_SELECTOR = "[data-image-role=target]";
+var DETAIL_TITLE_SELECTOR = "[data-image-role=title]";
+var THUMBNAIL_LINK_SELECTOR = "[data-image-role=trigger]";
+var currentThumb = 0;
 
 function setDetails(imageUrl, titleText) {
   "use strict";
@@ -26,14 +27,6 @@ function setDetailsFromThumb(thumbnail) {
   setDetails(imageFromThumb(thumbnail), titleFromThumb(thumbnail));
 }
 
-function addThumbClickHandler(thumb) {
-  "use strict";
-  thumb.addEventListener("click", function(event) {
-    event.preventDefault();
-    setDetailsFromThumb(thumb);
-  });
-}
-
 function getThumbnailsArray() {
   "use strict";
   var thumbnails = document.querySelectorAll(THUMBNAIL_LINK_SELECTOR);
@@ -44,7 +37,28 @@ function getThumbnailsArray() {
 function initializeEvents() {
   "use strict";
   var thumbnails = getThumbnailsArray();
-  thumbnails.forEach(addThumbClickHandler);
+  thumbnails.forEach(function(thumb, index) {
+    thumb.addEventListener("click", function(event) {
+      event.preventDefault();
+      if (index == 5) { //previous clicked
+        if (currentThumb <= 0) {
+          currentThumb = 5;
+        }
+        thumb = thumbnails[--currentThumb];
+      }
+      else if (index == 6) { //next clicked
+        if (currentThumb >= 4) {
+          currentThumb = -1;
+        }
+        thumb = thumbnails[++currentThumb];
+      }
+      else { //neither previous nor clicked
+        currentThumb = index;
+        thumb = thumbnails[currentThumb];
+      }
+      setDetailsFromThumb(thumb);
+    });
+  });
 }
 
 initializeEvents();
