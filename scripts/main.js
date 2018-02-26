@@ -41,21 +41,18 @@ function initializeEvents() {
     thumb.addEventListener("click", function(event) {
       event.preventDefault();
       if (index == 5) { //previous clicked
-        if (currentThumb <= 0) {
-          currentThumb = 5;
+        currentThumb--;
+        if (currentThumb < 0) {
+          currentThumb = 4;
         }
-        thumb = thumbnails[--currentThumb];
       }
       else if (index == 6) { //next clicked
-        if (currentThumb >= 4) {
-          currentThumb = -1;
-        }
-        thumb = thumbnails[++currentThumb];
+        currentThumb=(currentThumb+1)%5;
       }
-      else { //neither previous nor clicked
+      else { // clicked on the thumb
         currentThumb = index;
-        thumb = thumbnails[currentThumb];
       }
+      thumb = thumbnails[currentThumb];
       setDetailsFromThumb(thumb);
     });
   });
